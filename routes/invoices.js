@@ -22,20 +22,27 @@ router.get("/", async function (req, res, next) {
 router.get("/:id", async function (req, res, next) {
     const id = req.params.id;
 
-//TODO: refactor to a single query with a join
+    const result = await db.query(
+        `SELECT * FROM invoices
+         JOIN companies ON code = comp_code
+         WHERE id = $1`, [id]);
+    const row = result.rows[0];
 
-    const invoiceResult = await db.query(
-        "SELECT * FROM invoices WHERE id = $1", [id]);
-    const invoice = invoiceResult.rows[0];
+    if (!row) throw new NotFoundError(`No matching invoice: ${id}`);
 
-    if (!invoice) throw new NotFoundError(`No matching invoice: ${id}`);
+    const invoice = {
+        id: row.id,
+        amt: row.amt,
+        paid: row.paid,
+        add_date: row.add_date,
+        paid_date: row.paid_date,
+        company: {
+            code: row.code,
+            name: row.name,
+            description: row.description
+        }
+    };
 
-    const companyResult = await db.query(
-        "SELECT * FROM companies WHERE code = $1", [invoice.comp_code]);
-    const company = companyResult.rows[0];
-
-    invoice.company = company;
-    delete invoice.comp_code;
     return res.json({ invoice });
 });
 
