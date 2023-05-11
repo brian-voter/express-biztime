@@ -1,11 +1,16 @@
 /** BizTime express application. */
 
 const express = require("express");
-const { NotFoundError } = require("./expressError");
-
 const app = express();
 
+const { NotFoundError } = require("./expressError");
+
+const companyRoutes = require("./routes/companies");
+
+
 app.use(express.json());
+
+app.use("/companies", companyRoutes)
 
 
 /** 404 handler: matches unmatched routes; raises NotFoundError. */
