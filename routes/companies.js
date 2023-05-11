@@ -26,9 +26,9 @@ router.get("/:code", async function (req, res, next) {
     const company = companyResult.rows[0];
 
     if (!company) throw new NotFoundError(`No matching company: ${code}`);
+
     const invoicesResult = await db.query(
         "SELECT * FROM invoices WHERE comp_code = $1", [code]);
-
     const invoicesIds = invoicesResult.rows.map((invoice) => invoice.id);
 
     company.invoices = invoicesIds;

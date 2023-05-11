@@ -61,7 +61,7 @@ router.put("/:id", async function (req, res, next) {
     if (req.body === undefined
         || Object.keys(req.body).length != 1
         || !("amt" in req.body)) {
-        throw new BadRequestError("Must provide exactly one key/val pair: amt");
+        throw new BadRequestError("Expects exactly one key/val pair: amt");
     }
 
     const id = req.params.id;
