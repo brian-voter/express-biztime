@@ -18,7 +18,7 @@ router.get("/", async function (req, res, next) {
 
 
 /** GET /:code - return data about one company: `{company: company}` */
-
+//TODO: add to docstrings
 router.get("/:code", async function (req, res, next) {
     const code = req.params.code;
     const companyResult = await db.query(

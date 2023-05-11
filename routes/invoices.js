@@ -8,9 +8,8 @@ const db = require("../db");
 
 
 /** GET / - returns `{invoices: [invoice, ...]}` */
-
 router.get("/", async function (req, res, next) {
-    const results = await db.query("SELECT * FROM invoices");
+    const results = await db.query("SELECT * FROM invoices ORDER BY add_date");
     const invoices = results.rows;
 
     return res.json({ invoices });
@@ -22,6 +21,8 @@ router.get("/", async function (req, res, next) {
 
 router.get("/:id", async function (req, res, next) {
     const id = req.params.id;
+
+//TODO: refactor to a single query with a join
 
     const invoiceResult = await db.query(
         "SELECT * FROM invoices WHERE id = $1", [id]);
